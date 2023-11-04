@@ -12,7 +12,7 @@ API_ID = config['api_id']
 API_HASH = config['api_hash']
 CHAT_NAME = config['chat_name']
 LIMIT = config['limit']
-DATE = datetime.strptime(config['date'], '%d-%m-%Y').date()
+DATE = datetime.strptime(config['date'], '%d-%m-%Y %H:%M').date()
 REVERSE = config["reverse"]
 USERS = config["users"]
 
