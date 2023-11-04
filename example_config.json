@@ -2,7 +2,7 @@
   "api_id" : 12345678,
   "api_hash": "1q2w3e4r5t6y",
   "chat_name": "best_chat",
-  "date": "15-10-2010 15:00",
+  "date": "31-12-1969 23:59",
   "limit": 50,
   "reverse": true,
   "users": ["user-number-one", "user-number-two"]
