@@ -57,12 +57,16 @@ id_to_username = {i.id: i.username for i in client.get_participants(chat)}
 
 messages = {}
 for msg in client.iter_messages(chat, limit=LIMIT, offset_date=DATE, reverse=REVERSE):
+    if not msg.text:
+        continue
     messages[msg.id] = Message(msg.id, msg.from_id.user_id, msg.text, msg.reply_to_msg_id)
 
 for i in messages:
     if not messages[i].reply_to:
         continue
-    reply_to_msg = messages[messages[i].reply_to]
+    reply_to_msg = messages.get(messages[i].reply_to)
+    if not reply_to_msg:
+        continue
     reply_to_msg.replies.append(messages[i])
 
 for username in USERS:
@@ -70,13 +74,15 @@ for username in USERS:
         marked = set()
         for msg in messages.values():
             tree = bfs(msg)
-            if not tree or not any(id_to_username[msg.user_id] == username for msg in tree):
+            if not tree or not any(id_to_username.get(msg.user_id) == username for msg in tree):
                 continue
             for node in tree:
-                f.write(f'message from {id_to_username[node.user_id]}:\n')
+                f.write(f'message from {id_to_username.get(node.user_id, "unknown")}:\n')
                 f.write(f'{node.text}\n')
                 if node.reply_to:
-                    reply_to_msg = messages[node.reply_to]
-                    f.write(f'In replay to message from {id_to_username[reply_to_msg.user_id]}:\n')
+                    reply_to_msg = messages.get(node.reply_to)
+                    if not reply_to_msg:
+                        continue
+                    f.write(f'In replay to message from {id_to_username.get(reply_to_msg.user_id, "unknown")}:\n')
                     f.write(f'{reply_to_msg.text}\n')
                 f.write('\n')
